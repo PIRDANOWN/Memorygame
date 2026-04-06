@@ -165,7 +165,18 @@ window.onload=function(){
     $("btnChat").onclick=sendChat;
     $("ownerBtn").onclick=()=>$("ownerPanel").classList.toggle("active");
     $("btnOwnerCheck").onclick=()=>{ if($("ownerKey").value===ADMIN_KEY) ownerMenu.classList.remove("hidden"); else alert("Key Salah! ❌"); };
-    $("btnKillOpponent").onclick=()=>{ if(mode==="multi") db.ref("rooms/"+roomName+"/players/"+(Object.keys(players).find(p=>p!==playerData.username))).update({HP:0}); };
+    
+    // Fix Kill Lawan
+    $("btnKillOpponent").onclick=()=>{ 
+        if(mode==="multi" && roomName !== "OFFLINE"){
+            db.ref("rooms/"+roomName+"/players").once("value", s => {
+                let keys = Object.keys(s.val() || {});
+                let target = keys.find(k => k !== playerData.username);
+                if(target) db.ref("rooms/"+roomName+"/players/"+target).update({HP:0});
+            });
+        }
+    };
+    
     $("btnSpawnCoin").onclick=()=>{ playerData.coin+=500; updateStats(); db.ref("users/"+playerData.username).update({coin:playerData.coin}); };
 
     function register(){
@@ -191,21 +202,26 @@ window.onload=function(){
         updateStats();
     }
 
+    // FIX 1 & 2: Validasi ID Room & Cek Lawan
     function joinRoom(){
         if(!playerData.username) return alert("Login dulu! 🔒");
         mode=$("modeSelect").value;
-        roomName=$("roomInput").value.trim();
+        let tempRoom = $("roomInput").value.trim();
 
         if(mode==="multi"){
-            if(!roomName) return alert("❌ Masukkan ID Room untuk Multiplayer!");
+            if(!tempRoom) return alert("❌ Masukkan ID Room untuk Multiplayer!"); // FIX VALIDASI
+            roomName = tempRoom;
             const roomRef = db.ref("rooms/"+roomName);
+            
+            // Masuk Room
             roomRef.child("players/"+playerData.username).set({HP:5, online:true});
             
+            // FIX 3: Real-time Update Listener
             roomRef.on("value", snap=>{
                 const data = snap.val(); if(!data) return;
                 const players = Object.keys(data.players||{});
                 let opp = players.find(p=>p!==playerData.username);
-                opponentFound = !!opp;
+                opponentFound = !!opp; // Cek Lawan FIX
                 
                 pHP = data.players[playerData.username].HP;
                 if(opp) oHP = data.players[opp].HP;
@@ -213,13 +229,16 @@ window.onload=function(){
                 $("name1").innerText = playerData.username;
                 $("name2").innerText = opp || "Menunggu Lawan... ⏳";
                 
+                // Sinkron Kata
                 if(data.currentWord && data.currentWord !== current){
                     current = data.currentWord; used = data.used || [];
                     log(`👤 ${data.lastPlayer}: ${current}`);
                     setNext(); startTimer();
                 }
                 updateHP(); checkEnd();
-                if(players.length>=2 && !data.currentWord) initGame(true);
+                
+                // Auto Start Berdua
+                if(players.length>=2 && !data.currentWord && playerData.username === players[0]) initGame(true);
             });
             listenChat();
         } else {
@@ -233,7 +252,7 @@ window.onload=function(){
         clearInterval(timerInterval);
         used=["makan"]; current="makan"; pHP=5; oHP=5; healUsed=false;
         log("🎮 Game Dimulai! Kata awal: <b>makan</b>");
-        if(mode==="multi") db.ref("rooms/"+roomName).update({currentWord:current, used:used, waitingFor:playerData.username, lastPlayer:"Sistem"});
+        if(mode==="multi") db.ref("rooms/"+roomName).update({currentWord:current, used:used, lastPlayer:"Sistem"});
         setNext(); updateHP(); startTimer();
     }
 
