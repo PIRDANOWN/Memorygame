@@ -36,30 +36,30 @@
     <div class="ownerButton" id="ownerBtn">🔑</div>
     
     <div class="card" id="auth">
-        <h3>LOGIN / REGISTER</h3>
+        <h3>LOGIN / REGISTER 🎮</h3>
         <input id="username" placeholder="Username">
         <input id="password" type="password" placeholder="Password">
-        <button id="btnLogin">Login</button>
-        <button id="btnRegister">Register</button>
+        <button id="btnLogin">Login 🔓</button>
+        <button id="btnRegister">Register 📝</button>
         <p id="msg" class="msg"></p>
         <hr>
-        <h3>MODE BERMAIN</h3>
+        <h3>MODE BERMAIN 🕹️</h3>
         <select id="modeSelect">
             <option value="single">Single (AI - 75K Words)</option>
-            <option value="multi">Multiplayer (Butuh Lawan)</option>
+            <option value="multi">Multiplayer (Realtime)</option>
         </select>
         <select id="difficultySelect">
             <option value="easy">Easy</option>
             <option value="normal">Normal</option>
             <option value="hard">Hard</option>
         </select>
-        <input id="roomInput" placeholder="ID Room (Kosong = Random ID)">
-        <button id="btnStart" style="background: #4caf50; color: white; font-weight: bold;">Mulai Game</button>
-        <a href="https://discord.gg/WBfeqPT49" target="_blank" class="btn-discord">JOIN DISCORD</a>
+        <input id="roomInput" placeholder="ID Room (Wajib untuk Multi)">
+        <button id="btnStart" style="background: #4caf50; color: white; font-weight: bold;">Mulai Game 🚀</button>
+        <a href="https://discord.gg/WBfeqPT49" target="_blank" class="btn-discord">JOIN DISCORD 💬</a>
     </div>
 
     <div class="card hidden" id="game">
-        <div class="levelXP">LV: <span id="level">1</span> | XP: <span id="xp">0</span> | Coin: <span id="coin">0</span></div>
+        <div class="levelXP">⭐ LV: <span id="level">1</span> | 🧪 XP: <span id="xp">0</span> | 🪙 Coin: <span id="coin">0</span></div>
 
         <div class="hp-container">
             <div class="hp-box"><b>KAMU</b><span id="pHPText" class="hp-val">5</span></div>
@@ -71,7 +71,7 @@
 
         <div id="log"></div>
         <input id="input" placeholder="Ketik kata sambungan..." style="border: 2px solid #ff0; margin-top: 10px;">
-        <button id="btnSend" style="background: #667eea; color: white;">Kirim Kata</button>
+        <button id="btnSend" style="background: #667eea; color: white;">Kirim Kata ✈️</button>
 
         <div class="roomSlots">
             <div class="slot" id="slot1"><b>Kamu</b><span id="name1">-</span></div>
@@ -89,10 +89,7 @@
         <div id="leaderboard" class="leaderboard"></div>
 
         <div class="player-profile-info" id="playerProfile">
-            👤Name: - | 🆔ID: - | 🆔ID ROOM: -
-        </div>
-        <div class="player-profile-info">
-            📊 STATS: LV <span id="level2">1</span> | XP <span id="xp2">0</span>/100
+            👤 Name: - | 🆔 ID: - | 🆔 ROOM: -
         </div>
 
         <div class="chatBox" id="chatBox"></div>
@@ -100,8 +97,8 @@
             <input id="chatInput" placeholder="Ketik pesan chat...">
             <button id="btnChat" style="width: 80px;">Kirim</button>
         </div>
-        <button id="btnRestart">Restart</button>
-        <button id="btnLogout" style="background: #ff4d4d;">Keluar</button>
+        <button id="btnRestart">Restart 🔄</button>
+        <button id="btnLogout" style="background: #ff4d4d;">Keluar 🚪</button>
     </div>
 
     <div id="ownerPanel" class="ownerPanel">
@@ -110,24 +107,20 @@
         <button id="btnOwnerCheck">Masuk</button>
         <div id="ownerMenu" class="hidden">
             <p>Last Word: <span id="lastWord">-</span></p>
-            <div id="playerList"></div>
             <hr>
             <input id="targetBanned" placeholder="Username Target">
-            <button id="btnBanned" style="background: red;">BANNED</button>
-            <button id="btnUnbanned" style="background: green;">UNBANNED</button>
+            <button id="btnBanned" style="background: red;">BANNED 🚫</button>
             <hr>
-            <button id="btnOwnerWin">AUTO WIN</button>
-            <button id="btnHealMe">HEAL ME</button>
-            <button id="btnSpawnCoin">+500 COIN</button>
-            <button id="btnClearChat" style="background: orange;">CLEAR CHAT ROOM</button>
-            <button id="btnKillOpponent" style="background: black; color: white;">INSTANT KILL LAWAN</button>
+            <button id="btnOwnerWin">AUTO WIN 🏆</button>
+            <button id="btnHealMe">HEAL ME ❤️</button>
+            <button id="btnSpawnCoin">+500 COIN 🪙</button>
+            <button id="btnKillOpponent" style="background: black; color: white;">KILL LAWAN 💀</button>
         </div>
         <button id="btnOwnerClose">Tutup</button>
     </div>
 
 <script>
 window.onload=function(){
-    // CONFIG FIREBASE (Tetap Sama)
     const firebaseConfig = {
       apiKey: "AIzaSyAsegtxDbDkADPrd_dmqUqpIrhwKUOUU0o",
       authDomain: "pirdangame.firebaseapp.com",
@@ -144,146 +137,180 @@ window.onload=function(){
 
     const ADMIN_KEY="PIRDANOWN2211";
     let playerData={username:"",level:1,xp:0,coin:0,uid:""};
-    let roomName="",mode="single",difficulty="easy";
-    let used=[],current="";
-    let pHP=5,oHP=5;
-    let timerInterval,time=10;
-    let healUsed=false, hasShield=false, doubleXP=false;
-    let opponent="";
-    let waitingFor = ""; 
+    let roomName="", mode="single", used=[], current="";
+    let pHP=5, oHP=5, timerInterval, time=10;
+    let healUsed=false, hasShield=false, doubleXP=false, opponentFound=false;
 
-    // Kamus & Utility
     let dictionary = [];
     let commonWords = ["aku","kamu","makan","minum","lari","jalan","tidur","bangun","rumah","nasi","mobil","motor","buku","meja","kursi","lampu","pintu","sepatu","celana","topi"];
-    fetch('https://raw.githubusercontent.com/dwyl/english-words/master/words_alpha.txt').then(r=>r.text()).then(t=>dictionary=t.split('\n').map(w=>w.trim().toLowerCase())).catch(()=>dictionary=commonWords);
+
+    fetch('https://raw.githubusercontent.com/dwyl/english-words/master/words_alpha.txt')
+    .then(r => r.text()).then(text => {
+        dictionary = text.split('\n').map(w => w.trim().toLowerCase()).filter(w => w.length > 2);
+    }).catch(() => dictionary = commonWords);
 
     const $=(id)=>document.getElementById(id);
     const pHPText=$("pHPText"), oHPText=$("oHPText"), logEl=$("log"), timerEl=$("timer"), nextWord=$("nextWord"), input=$("input");
-    const levelEl=$("level"), xpEl=$("xp"), coinEl=$("coin"), leaderboardEl=$("leaderboard"), lastWordEl=$("lastWord"), chatBox=$("chatBox"), chatInput=$("chatInput");
-    const msgEl=$("msg"), ownerPanel=$("ownerPanel"), ownerMenu=$("ownerMenu"), ownerKey=$("ownerKey");
+    const levelEl=$("level"), xpEl=$("xp"), coinEl=$("coin"), chatBox=$("chatBox"), msgEl=$("msg"), ownerMenu=$("ownerMenu");
 
-    // AUTH & ROOM LOGIC
     $("btnRegister").onclick=register;
     $("btnLogin").onclick=login;
     $("btnStart").onclick=joinRoom;
     $("btnSend").onclick=playerTurn;
     $("btnRestart").onclick=()=>initGame(true);
-    $("btnLogout").onclick=()=>location.reload();
+    $("btnHeal").onclick=useHeal;
+    $("btnHint").onclick=hintWord;
+    $("btnDoubleXP").onclick=()=>buyItem('xp');
+    $("btnShield").onclick=()=>buyItem('shield');
+    $("btnChat").onclick=sendChat;
+    $("ownerBtn").onclick=()=>$("ownerPanel").classList.toggle("active");
+    $("btnOwnerCheck").onclick=()=>{ if($("ownerKey").value===ADMIN_KEY) ownerMenu.classList.remove("hidden"); else alert("Key Salah! ❌"); };
+    $("btnKillOpponent").onclick=()=>{ if(mode==="multi") db.ref("rooms/"+roomName+"/players/"+(Object.keys(players).find(p=>p!==playerData.username))).update({HP:0}); };
+    $("btnSpawnCoin").onclick=()=>{ playerData.coin+=500; updateStats(); db.ref("users/"+playerData.username).update({coin:playerData.coin}); };
 
     function register(){
         let u=$("username").value.trim().toLowerCase(), p=$("password").value;
-        if(!u||!p){ msgEl.innerText="❌ Masukkan data!"; return; }
-        db.ref("users/"+u).set({pass:p,coin:100,level:1,xp:0,uid:"ID-"+Math.floor(Math.random()*9000)}).then(()=>msgEl.innerText="✅ Sukses!");
+        if(!u||!p){ msgEl.innerText="⚠️ Isi semua field!"; return; }
+        db.ref("users/"+u).get().then(s=>{
+            if(s.exists()){ msgEl.innerText="❌ User sudah ada!"; return; }
+            db.ref("users/"+u).set({pass:p,coin:100,level:1,xp:0,uid:"ID-"+Math.floor(Math.random()*9999)}).then(()=>msgEl.innerText="✅ Berhasil!");
+        });
     }
 
     function login(){
         let u=$("username").value.trim().toLowerCase(), p=$("password").value;
-        db.ref("users/"+u).get().then(snap=>{
-            if(snap.exists() && snap.val().pass===p){
-                playerData={...snap.val(),username:u};
-                msgEl.innerText=`✅ Halo ${u}!`;
-                updateProfileUI();
-            } else alert("Salah user/pass!");
+        db.ref("users/"+u).get().then(s=>{
+            if(s.exists() && s.val().pass===p){
+                playerData={...s.val(),username:u}; msgEl.innerText="✅ Login Sukses!"; updateProfile();
+            } else { msgEl.innerText="❌ Login Gagal!"; }
         });
     }
 
-    function updateProfileUI(){
-        $("playerProfile").innerText = `👤Name: ${playerData.username} | 🆔ID: ${playerData.uid} | 🆔ID ROOM: ${roomName}`;
-        $("level2").innerText = playerData.level; $("xp2").innerText = playerData.xp;
+    function updateProfile(){
+        $("playerProfile").innerText = `👤 Name: ${playerData.username} | 🆔 ID: ${playerData.uid} | 🆔 ROOM: ${roomName||'-'}`;
         updateStats();
     }
 
     function joinRoom(){
-        if(!playerData.username) return alert("Login dulu!");
+        if(!playerData.username) return alert("Login dulu! 🔒");
         mode=$("modeSelect").value;
-        roomName=$("roomInput").value.trim() || "ROOM-"+Math.floor(Math.random()*9000);
-        
+        roomName=$("roomInput").value.trim();
+
         if(mode==="multi"){
+            if(!roomName) return alert("❌ Masukkan ID Room untuk Multiplayer!");
             const roomRef = db.ref("rooms/"+roomName);
-            roomRef.child("players/"+playerData.username).set({HP:5, coin:playerData.coin, online:true});
+            roomRef.child("players/"+playerData.username).set({HP:5, online:true});
+            
             roomRef.on("value", snap=>{
                 const data = snap.val(); if(!data) return;
                 const players = Object.keys(data.players||{});
-                opponent = players.find(p=>p!==playerData.username)||"";
+                let opp = players.find(p=>p!==playerData.username);
+                opponentFound = !!opp;
                 
-                // Sync HP & Giliran
                 pHP = data.players[playerData.username].HP;
-                if(opponent && data.players[opponent]) oHP = data.players[opponent].HP;
-                
-                waitingFor = data.waitingFor || players[0];
-                input.placeholder = (waitingFor === playerData.username) ? "Giliranku!" : "Giliran Lawan...";
-                $("btnSend").disabled = (waitingFor !== playerData.username);
+                if(opp) oHP = data.players[opp].HP;
 
-                // Sync Kata
+                $("name1").innerText = playerData.username;
+                $("name2").innerText = opp || "Menunggu Lawan... ⏳";
+                
                 if(data.currentWord && data.currentWord !== current){
                     current = data.currentWord; used = data.used || [];
                     log(`👤 ${data.lastPlayer}: ${current}`);
                     setNext(); startTimer();
                 }
-                updateHP(); updateStats();
-                $("name1").innerText = playerData.username; $("name2").innerText = opponent||"Menunggu...";
-                if(players.length>=2 && !data.currentWord && playerData.username === players[0]) initGame(true);
+                updateHP(); checkEnd();
+                if(players.length>=2 && !data.currentWord) initGame(true);
             });
             listenChat();
-        } else { initGame(true); }
+        } else {
+            roomName = "OFFLINE"; initGame(true);
+        }
         $("auth").classList.add("hidden"); $("game").classList.remove("hidden");
+        updateProfile();
     }
 
-    function initGame(isReset){
-        current="makan"; used=["makan"]; pHP=5; oHP=5;
-        log("🎮 Game Start! Kata: makan");
-        if(mode==="multi"){
-            db.ref("rooms/"+roomName).update({currentWord:"makan", used:["makan"], waitingFor:playerData.username, lastPlayer:"Sistem"});
-        }
+    function initGame(reset){
+        clearInterval(timerInterval);
+        used=["makan"]; current="makan"; pHP=5; oHP=5; healUsed=false;
+        log("🎮 Game Dimulai! Kata awal: <b>makan</b>");
+        if(mode==="multi") db.ref("rooms/"+roomName).update({currentWord:current, used:used, waitingFor:playerData.username, lastPlayer:"Sistem"});
         setNext(); updateHP(); startTimer();
     }
 
     function playerTurn(){
+        if(mode==="multi" && !opponentFound) return alert("⏳ Tunggu lawan masuk dulu!");
         let w=input.value.toLowerCase().trim(); input.value="";
-        if(!w || used.includes(w) || !w.startsWith(current.slice(-2))) return log("❌ Kata tidak valid!");
+        if(!w) return;
+        if(used.includes(w)){ log("⚠️ Kata sudah dipakai!"); return; }
+        if(!w.startsWith(current.slice(-2))){ log("❌ Salah awalan! Harus: "+current.slice(-2)); damagePlayer(1); return; }
         
-        used.push(w); current=w; log(`🧑 Kamu: ${w}`); gainXP(); setNext();
-        if(mode==="multi"){
-            db.ref("rooms/"+roomName).update({currentWord:w, used:used, waitingFor:opponent, lastPlayer:playerData.username});
-        } else { setTimeout(aiTurn, 800); }
+        used.push(w); current=w; log(`🧑 Kamu: ${w} ✅`); gainXP(); setNext();
+        if(mode==="multi") db.ref("rooms/"+roomName).update({currentWord:w, used:used, lastPlayer:playerData.username});
+        else { startTimer(); setTimeout(aiTurn, 1000); }
     }
 
     function aiTurn(){
-        let pick=dictionary.find(w=>w.startsWith(current.slice(-2))&&!used.includes(w))||"nasi";
-        used.push(pick); current=pick; log(`🤖 AI: ${pick}`); setNext(); startTimer();
+        let last2 = current.slice(-2);
+        let options = dictionary.filter(w=>w.startsWith(last2) && !used.includes(w));
+        if(!options.length){ log("🤖 AI Menyerah! 🏳️"); damageOpponent(1); return; }
+        let pick = options[Math.floor(Math.random()*options.length)];
+        used.push(pick); current=pick; log(`🤖 AI: ${pick} ⚡`); setNext(); startTimer();
     }
 
     function startTimer(){
         clearInterval(timerInterval); time=10; timerEl.innerText=time;
         timerInterval=setInterval(()=>{
             time--; timerEl.innerText=time;
-            if(time<=0){ log("⏰ Waktu habis!"); damagePlayer(1); time=10; }
+            if(time<=0){ log("⏰ Waktu Habis! Darah bocor! 🩸"); damagePlayer(1); time=10; }
         },1000);
     }
 
     function damagePlayer(d){
+        if(hasShield){ log("🛡️ Shield melindungi kamu!"); hasShield=false; return; }
         pHP-=d; if(pHP<0)pHP=0; updateHP();
         if(mode==="multi") db.ref("rooms/"+roomName+"/players/"+playerData.username).update({HP:pHP});
-        if(pHP<=0) log("💀 KALAH!");
+        checkEnd();
     }
 
-    // Fitur Tambahan (Shop, Chat, Owner) tetap sama seperti aslinya
-    $("btnHeal").onclick=()=>{ if(playerData.coin>=10){ pHP=5; playerData.coin-=10; updateHP(); updateStats(); }};
-    $("btnHint").onclick=()=>{ if(playerData.coin>=5){ log("💡 Hint: "+dictionary.find(w=>w.startsWith(current.slice(-2)))); playerData.coin-=5; updateStats(); }};
-    $("btnChat").onclick=sendChat;
-    function sendChat(){ if(chatInput.value.trim()){ db.ref("rooms/"+roomName+"/chat").push({user:playerData.username, msg:chatInput.value.trim()}); chatInput.value=""; }}
-    function listenChat(){ db.ref("rooms/"+roomName+"/chat").limitToLast(10).on("child_added",s=>{let c=s.val();chatBox.innerHTML+=`<b>${c.user}:</b> ${c.msg}<br>`;chatBox.scrollTop=chatBox.scrollHeight;});}
-    function updateHP(){ pHPText.innerText=pHP; oHPText.innerText=oHP; }
-    function updateStats(){ levelEl.innerText=playerData.level; xpEl.innerText=playerData.xp; coinEl.innerText=playerData.coin; }
+    function damageOpponent(d){ oHP-=d; if(oHP<0)oHP=0; updateHP(); checkEnd(); }
+
+    function checkEnd(){
+        if(pHP<=0){ log("🏁 KAMU KALAH! 💀"); clearInterval(timerInterval); }
+        else if(oHP<=0){ log("🏁 KAMU MENANG! 🏆"); clearInterval(timerInterval); }
+    }
+
+    function useHeal(){
+        if(healUsed) return alert("❌ Heal cuma bisa 1x per game! 🧪");
+        if(playerData.coin<10) return alert("🪙 Coin tidak cukup!");
+        playerData.coin-=10; pHP=5; healUsed=true; updateHP(); updateStats();
+        log("❤️ Kamu memulihkan HP!");
+    }
+
+    function buyItem(type){
+        if(type==='xp' && playerData.coin>=20){ playerData.coin-=20; doubleXP=true; log("✨ 2x XP Aktif!"); }
+        if(type==='shield' && playerData.coin>=25){ playerData.coin-=25; hasShield=true; log("🛡️ Shield Aktif!"); }
+        updateStats();
+    }
+
+    function hintWord(){
+        if(playerData.coin<5) return alert("🪙 Coin kurang!");
+        let h = dictionary.find(w=>w.startsWith(current.slice(-2)) && !used.includes(w));
+        if(h){ playerData.coin-=5; log("💡 Hint: "+h); updateStats(); }
+    }
+
     function log(t){ logEl.innerHTML+=t+"<br>"; logEl.scrollTop=logEl.scrollHeight; }
     function setNext(){ nextWord.innerText=current.slice(-2).toUpperCase(); }
-    function gainXP(){ playerData.xp+=10; if(playerData.xp>=100){ playerData.level++; playerData.xp=0; } db.ref("users/"+playerData.username).update(playerData); updateStats(); }
+    function updateHP(){ pHPText.innerText=pHP; oHPText.innerText=oHP; }
+    function updateStats(){ levelEl.innerText=playerData.level; coinEl.innerText=playerData.coin; xpEl.innerText=playerData.xp; }
+    function gainXP(){ let n=Math.floor(Math.random()*10)+5; if(doubleXP)n*=2; playerData.xp+=n; if(playerData.xp>=100){playerData.level++;playerData.xp=0;} updateStats(); db.ref("users/"+playerData.username).update(playerData); }
     
-    // Owner Panel
-    $("ownerBtn").onclick=()=>ownerPanel.classList.toggle("active");
-    $("btnOwnerCheck").onclick=()=>{ if(ownerKey.value===ADMIN_KEY) ownerMenu.classList.remove("hidden"); };
-    $("btnKillOpponent").onclick=()=>{ if(mode==="multi") db.ref("rooms/"+roomName+"/players/"+opponent).update({HP:0}); };
-    $("btnSpawnCoin").onclick=()=>{ playerData.coin+=500; updateStats(); db.ref("users/"+playerData.username).update({coin:playerData.coin}); };
+    function sendChat(){
+        let m=$("chatInput").value; if(!m)return;
+        db.ref("rooms/"+roomName+"/chat").push({user:playerData.username, msg:m}); $("chatInput").value="";
+    }
+    function listenChat(){
+        db.ref("rooms/"+roomName+"/chat").on("child_added",s=>{ chatBox.innerHTML+=`<b>${s.val().user}:</b> ${s.val().msg}<br>`; chatBox.scrollTop=chatBox.scrollHeight; });
+    }
 };
 </script>
 </body>
